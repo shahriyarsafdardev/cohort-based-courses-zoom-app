@@ -1,14 +1,12 @@
-import React from 'react'
+import React from "react";
 import { useRouter } from "next/router";
 
 function Auth() {
-  var router = useRouter();
+  const router = useRouter();
 
-  var code = router.query["code"];
+  const code = router.query["code"];
 
-  return (
-    <div>{`Sphere's zoom app has been added to your Zoom`}</div>
-  )
+  return <div>{`Sphere's zoom app has been added to your Zoom`}</div>;
 }
 
-export default Auth
+export default Auth;

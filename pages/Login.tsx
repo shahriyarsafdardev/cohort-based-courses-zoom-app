@@ -1,10 +1,10 @@
-import * as Yup from 'yup';
-import { useState } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import closeFill from '@iconify/icons-eva/close-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import * as Yup from "yup";
+import { useState } from "react";
+import { useFormik, Form, FormikProvider } from "formik";
+import { styled } from "@material-ui/core/styles";
+import { Icon } from "@iconify/react";
+import eyeFill from "@iconify/icons-eva/eye-fill";
+import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 // material
 import {
   Stack,
@@ -13,11 +13,11 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
-} from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
-import useAuth from '../utils/hooks/useAuth';
-import useIsMountedRef from '../utils/hooks/useIsMountedRef';
+  FormControlLabel,
+} from "@material-ui/core";
+import { LoadingButton } from "@material-ui/lab";
+import useAuth from "../utils/hooks/useAuth";
+import useIsMountedRef from "../utils/hooks/useIsMountedRef";
 // ----------------------------------------------------------------------
 type InitialValues = {
   email: string;
@@ -25,33 +25,43 @@ type InitialValues = {
   remember: boolean;
   afterSubmit?: string;
 };
+
+const StyledLogin = styled(Form)(({ theme }) => ({
+  width: "100%",
+  maxWidth: "300px",
+}));
+
 export default function LoginForm() {
-  const { login } = useAuth() ;
+  const { login } = useAuth();
   const isMountedRef = useIsMountedRef();
   const [showPassword, setShowPassword] = useState(false);
-  const [color, setColor] = useState<any>('error');
+  const [color, setColor] = useState<any>("error");
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    email: Yup.string()
+      .email("Email must be a valid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
 
   const formik = useFormik<InitialValues>({
     initialValues: {
-      email: '',
-      password: '',
-      remember: true
+      email: "",
+      password: "",
+      remember: true,
     },
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await login(values.email, values.password).then((res: any) => { console.log(res) });
+        await login(values.email, values.password).then((res: any) => {
+          console.log(res);
+        });
         if (isMountedRef.current) {
           setSubmitting(false);
         }
       } catch (error: any) {
         console.error(error);
-        values.password = '';
+        values.password = "";
         if (isMountedRef.current) {
           setSubmitting(false);
           setErrors({ afterSubmit: error.message });
@@ -60,10 +70,11 @@ export default function LoginForm() {
           setColor(error.color);
         }
       }
-    }
+    },
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
+    formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -71,18 +82,20 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <StyledLogin autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          {errors.afterSubmit && <Alert severity={color}>{errors.afterSubmit}</Alert>}
+          {errors.afterSubmit && (
+            <Alert severity={color}>{errors.afterSubmit}</Alert>
+          )}
 
           <TextField
             fullWidth
             autoComplete="username"
             type="email"
             label="Email address"
-            {...getFieldProps('email')}
+            {...getFieldProps("email")}
             inputProps={{
-              'data-testid': 'email'
+              "data-testid": "email",
             }}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -91,27 +104,38 @@ export default function LoginForm() {
           <TextField
             fullWidth
             autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             label="Password"
-            {...getFieldProps('password')}
+            {...getFieldProps("password")}
             inputProps={{
-              'data-testid': 'password',
+              "data-testid": "password",
               endadornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleShowPassword} edge="end">
                     <Icon icon={showPassword ? eyeFill : eyeOffFill} />
                   </IconButton>
                 </InputAdornment>
-              )
+              ),
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ my: 2 }}
+        >
           <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
+            control={
+              <Checkbox
+                {...getFieldProps("remember")}
+                checked={values.remember}
+                color="default"
+              />
+            }
             label="Remember me"
           />
         </Stack>
@@ -123,10 +147,11 @@ export default function LoginForm() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          style={{ backgroundColor: "#101658", borderRadius: "20px" }}
         >
           Login
         </LoadingButton>
-      </Form>
+      </StyledLogin>
     </FormikProvider>
   );
 }
