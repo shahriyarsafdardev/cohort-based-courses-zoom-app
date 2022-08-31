@@ -1,8 +1,9 @@
-import { Stack, Button, Typography, Box, Card } from "@material-ui/core";
+import { Stack, Button, Typography, Box } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TimeStamp from "./Timestamp";
-import { TimeStampType } from "../../utils/types/user";
+import { TimeStampType, ActiveSession } from "../../utils/types/user";
+import axios from "../../utils/axios";
 
 const StyledPage = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -22,14 +23,49 @@ const StyledStack = styled(Stack)(({ theme }) => ({
 }));
 
 function SessionTab() {
-  const [sessionTimestamps, setSessionTimestamps] = useState<TimeStampType[]>([
-    {
-      id: "1",
-      description: "Test description Test description",
-      session_id: "2",
-      recording_time: "12:45",
-    },
-  ]);
+  const [activeSession, setActiveSession] = useState<ActiveSession>();
+  console.log(activeSession);
+  const [sessionTimestamps, setSessionTimestamps] = useState<TimeStampType[]>(
+    []
+  );
+
+  const handleAddTimestamp = () => {
+    try {
+      axios
+        .post("/session_timestamps/add_timestamp.json", {
+          session_id: activeSession?.id,
+          session_time: activeSession?.session_time,
+        })
+        .then((res) => {
+          setSessionTimestamps([...sessionTimestamps, res.data.timestamp]);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleUpdateTimestamp = (res: TimeStampType) => {
+    const index = sessionTimestamps.findIndex(
+      (timestamp) => timestamp.id === res.id
+    );
+    if (index > -1) {
+      const updatedTimestamp = [...sessionTimestamps];
+      updatedTimestamp[index] = res;
+      setSessionTimestamps(updatedTimestamp);
+    }
+  };
+
+  useEffect(() => {
+    console.log("test");
+    try {
+      axios.get("/session_timestamps/active_session.json").then((res) => {
+        setActiveSession(res.data.active_session);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   return (
     <StyledPage>
       <StyledStack
@@ -50,6 +86,7 @@ function SessionTab() {
             variant="contained"
             fullWidth
             style={{ backgroundColor: "#101658", borderRadius: "20px" }}
+            onClick={handleAddTimestamp}
           >
             Save Timestamp
           </Button>
@@ -62,10 +99,16 @@ function SessionTab() {
         </Typography>
       </StyledStack>
 
-      <StyledStack spacing={2}>
+      <StyledStack spacing={2} key={sessionTimestamps.length}>
         {sessionTimestamps &&
           sessionTimestamps.map((timestamp) => {
-            return <TimeStamp timeStamp={timestamp} key={timestamp.id} />;
+            return (
+              <TimeStamp
+                timeStamp={timestamp}
+                key={timestamp.id}
+                updateTimestamps={handleUpdateTimestamp}
+              />
+            );
           })}
       </StyledStack>
     </StyledPage>
