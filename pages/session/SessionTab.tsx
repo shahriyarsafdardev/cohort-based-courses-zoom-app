@@ -1,4 +1,10 @@
-import { Stack, Button, Typography, Box } from "@material-ui/core";
+import {
+  Stack,
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+} from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
 import TimeStamp from "./Timestamp";
@@ -24,7 +30,6 @@ const StyledStack = styled(Stack)(({ theme }) => ({
 
 function SessionTab() {
   const [activeSession, setActiveSession] = useState<ActiveSession>();
-  console.log(activeSession);
   const [sessionTimestamps, setSessionTimestamps] = useState<TimeStampType[]>(
     []
   );
@@ -37,7 +42,7 @@ function SessionTab() {
           session_time: activeSession?.session_time,
         })
         .then((res) => {
-          setSessionTimestamps([...sessionTimestamps, res.data.timestamp]);
+          setSessionTimestamps([res.data.timestamp, ...sessionTimestamps]);
         });
     } catch (e) {
       console.log(e);
@@ -56,61 +61,81 @@ function SessionTab() {
   };
 
   useEffect(() => {
-    console.log("test");
     try {
       axios.get("/session_timestamps/active_session.json").then((res) => {
-        setActiveSession(res.data.active_session);
+        setActiveSession(res.data?.active_session || []);
+        setSessionTimestamps(res.data?.timestamps);
       });
     } catch (e) {
       console.log(e);
     }
   }, []);
 
+  if (typeof activeSession === "undefined") {
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <StyledPage>
-      <StyledStack
-        spacing={2}
-        sx={{ boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.08)", padding: "25px" }}
-      >
-        <Stack direction="column" spacing={2} alignItems="center">
-          <img
-            src="https://sphere-public.s3.eu-west-2.amazonaws.com/sphere_blue.svg"
-            alt="logo"
-            width="140"
-          />
-          <Typography style={{ textAlign: "center" }}>
-            Timestamps allow you to easily save points in your sessions so that
-            you can review them later!
-          </Typography>
-          <Button
-            variant="contained"
-            fullWidth
-            style={{ backgroundColor: "#101658", borderRadius: "20px" }}
-            onClick={handleAddTimestamp}
+      {activeSession && activeSession.id ? (
+        <>
+          <StyledStack
+            spacing={2}
+            sx={{
+              boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.08)",
+              padding: "25px",
+            }}
           >
-            Save Timestamp
-          </Button>
-        </Stack>
-        <Box
-          style={{ border: "1px solid #E2E8F0", width: "300px", height: "0px" }}
-        />
-        <Typography style={{ color: "#334155", fontWeight: "bold" }}>
-          Saved Timestamps
-        </Typography>
-      </StyledStack>
+            <Stack direction="column" spacing={2} alignItems="center">
+              <img src="/sphere_blue.svg" alt="logo" width="140" />
+              <Typography style={{ textAlign: "center" }}>
+                Timestamps allow you to easily save points in your sessions so
+                that you can review them later!
+              </Typography>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#101658",
+                  borderRadius: "20px",
+                  width: "90%",
+                }}
+                onClick={handleAddTimestamp}
+              >
+                Save Timestamp
+              </Button>
+            </Stack>
+            <Box
+              style={{
+                border: "1px solid #E2E8F0",
+                width: "300px",
+                height: "0px",
+              }}
+            />
+            <Typography style={{ color: "#334155", fontWeight: "bold" }}>
+              Saved Timestamps
+            </Typography>
+          </StyledStack>
 
-      <StyledStack spacing={2} key={sessionTimestamps.length}>
-        {sessionTimestamps &&
-          sessionTimestamps.map((timestamp) => {
-            return (
-              <TimeStamp
-                timeStamp={timestamp}
-                key={timestamp.id}
-                updateTimestamps={handleUpdateTimestamp}
-              />
-            );
-          })}
-      </StyledStack>
+          <StyledStack spacing={2} key={sessionTimestamps.length}>
+            {sessionTimestamps &&
+              sessionTimestamps.map((timestamp) => {
+                return (
+                  <TimeStamp
+                    timeStamp={timestamp}
+                    key={timestamp.id}
+                    updateTimestamps={handleUpdateTimestamp}
+                  />
+                );
+              })}
+          </StyledStack>
+        </>
+      ) : (
+        <Box>Session is not live</Box>
+      )}
     </StyledPage>
   );
 }

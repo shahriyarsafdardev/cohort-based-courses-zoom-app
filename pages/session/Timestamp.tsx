@@ -15,6 +15,18 @@ function TimeStamp({
     timeStamp?.description || ""
   );
 
+  function secondsToHms(d: any) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = Math.floor((d % 3600) % 60);
+
+    var hDisplay = h > 0 ? (m > 0 ? `${h}:` : `${h}`) : "";
+    var mDisplay = m > 0 ? (s > 0 ? `${m}:` : `${m}`) : "";
+    var sDisplay = s > 0 ? `${s}` : ":00";
+    return hDisplay + mDisplay + sDisplay;
+  }
+
   const handleSubmit = () => {
     setUpdateDescription(!updateDescription);
     if (updateDescription) {
@@ -47,7 +59,7 @@ function TimeStamp({
         {updateDescription ? (
           <TextField
             id="outlined-multiline-static"
-            label="Multiline"
+            label="Enter description"
             multiline
             rows={4}
             onChange={(e) => setDescription(e.target.value)}
@@ -55,7 +67,8 @@ function TimeStamp({
           />
         ) : (
           <Typography style={{ color: "#454F5B", fontSize: "14px" }}>
-            {timeStamp?.timestamp} | {timeStamp?.description}
+            {secondsToHms(timeStamp?.timestamp || 0)}
+            {` | ${timeStamp?.description || "New Timestamp"}`}
           </Typography>
         )}
         <Button
@@ -64,7 +77,11 @@ function TimeStamp({
           style={{ borderRadius: "20px", color: "#475569" }}
           fullWidth
         >
-          {updateDescription ? "Save Description" : "Edit Description"}
+          {updateDescription
+            ? "Save Description"
+            : !timeStamp?.description
+            ? "Add Description"
+            : "Edit Description"}
         </Button>
       </Stack>
     </Box>
