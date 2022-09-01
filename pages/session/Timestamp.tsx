@@ -6,9 +6,11 @@ import axios from "../../utils/axios";
 function TimeStamp({
   timeStamp,
   updateTimestamps,
+  setActiveSession,
 }: {
   timeStamp?: TimeStampType;
   updateTimestamps: Function;
+  setActiveSession: Function;
 }) {
   const [updateDescription, setUpdateDescription] = useState(false);
   const [description, setDescription] = useState<string>(
@@ -30,17 +32,13 @@ function TimeStamp({
   const handleSubmit = () => {
     setUpdateDescription(!updateDescription);
     if (updateDescription) {
-      try {
-        axios
-          .post(`/session_timestamps/${timeStamp?.id}/update_timestamp.json`, {
-            description: description,
-          })
-          .then((res) => {
-            updateTimestamps(res.data);
-          });
-      } catch (e) {
-        console.log(e);
-      }
+      axios
+        .post(`/session_timestamps/${timeStamp?.id}/update_timestamp.json`, {
+          description: description,
+        })
+        .then((res) => {
+          updateTimestamps(res.data);
+        });
     }
   };
 

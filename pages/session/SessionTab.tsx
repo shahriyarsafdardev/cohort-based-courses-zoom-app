@@ -120,14 +120,15 @@ function SessionTab() {
             </Typography>
           </StyledStack>
 
-          <StyledStack spacing={2} key={sessionTimestamps.length}>
+          <StyledStack spacing={2} key={sessionTimestamps?.length}>
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp) => {
                 return (
                   <TimeStamp
                     timeStamp={timestamp}
-                    key={timestamp.id}
+                    key={timestamp?.id}
                     updateTimestamps={handleUpdateTimestamp}
+                    setActiveSession={setActiveSession}
                   />
                 );
               })}
