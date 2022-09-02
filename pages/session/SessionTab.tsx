@@ -41,9 +41,17 @@ function SessionTab() {
           session_id: activeSession?.id,
           session_time: activeSession?.session_time,
         })
-        .then((res) => {
-          setSessionTimestamps([res.data.timestamp, ...sessionTimestamps]);
-        });
+        .then(
+          (response) => {
+            setSessionTimestamps([
+              response.data.timestamp,
+              ...sessionTimestamps,
+            ]);
+          },
+          (error) => {
+            console.log(error, "wew");
+          }
+        );
     } catch (e) {
       console.log(e);
     }
@@ -135,7 +143,9 @@ function SessionTab() {
           </StyledStack>
         </>
       ) : (
-        <Box>Session is not live</Box>
+        <Typography style={{ color: "#334155", fontWeight: "bold" }}>
+          No sessions live at the moment
+        </Typography>
       )}
     </StyledPage>
   );
