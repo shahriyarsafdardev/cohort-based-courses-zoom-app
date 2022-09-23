@@ -27,6 +27,11 @@ export type ParticipantProfile = {
 export type TimeStampType = {
   id: string;
   session_id: string;
-  recording_time: string;
+  timestamp: string;
   description?: string;
+}
+
+export type ActiveSession = {
+  id: string;
+  session_time: string;
 }

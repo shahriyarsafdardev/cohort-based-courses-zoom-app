@@ -1,12 +1,71 @@
 import React, { useState } from "react";
 import { TimeStampType } from "../../utils/types/user";
 import { Box, Typography, Stack, Button, TextField } from "@material-ui/core";
+import axios from "../../utils/axios";
+import { styled } from "@material-ui/core/styles";
+import ConfirmationAlert from "./ConfirmationAlert";
 
-function TimeStamp({ timeStamp }: { timeStamp?: TimeStampType }) {
+const StyledIcon = styled("img")(() => ({
+  width: 24,
+  height: 24,
+  position: "absolute",
+  top: "5px",
+  right: "5px",
+  cursor: "pointer",
+}));
+
+function TimeStamp({
+  timeStamp,
+  updateTimestamps,
+  setActiveSession,
+  deleteTimestamp,
+  addAnimation,
+}: {
+  timeStamp?: TimeStampType;
+  updateTimestamps: Function;
+  setActiveSession: Function;
+  deleteTimestamp: Function;
+  addAnimation: boolean;
+}) {
+  const [updateDescription, setUpdateDescription] = useState(false);
+  const [description, setDescription] = useState<string>(
+    timeStamp?.description || ""
+  );
+  const [open, setOpen] = useState(false);
+
+  function secondsToHms(d: any) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = Math.floor((d % 3600) % 60);
+
+    var hDisplay = h > 0 ? (m > 0 ? `${h}:` : `${h}`) : "";
+    var mDisplay = m > 0 ? (s > 0 ? `${m}:` : `${m}`) : "";
+    var sDisplay = s > 0 ? `${s}` : ":00";
+    return hDisplay + mDisplay + sDisplay;
+  }
+
   const handleSubmit = () => {
     setUpdateDescription(!updateDescription);
+    if (updateDescription) {
+      axios
+        .post(`/session_timestamps/${timeStamp?.id}/update_timestamp.json`, {
+          description: description,
+        })
+        .then((res) => {
+          updateTimestamps(res.data);
+        });
+    }
   };
-  const [updateDescription, setUpdateDescription] = useState(false);
+
+  const handleDelete = () => {
+    axios
+      .delete(`/session_timestamps/${timeStamp?.id}/remove_timestamp.json`)
+      .then((res) => {
+        deleteTimestamp(timeStamp?.id);
+      });
+  };
+
   return (
     <Box
       style={{
@@ -16,20 +75,39 @@ function TimeStamp({ timeStamp }: { timeStamp?: TimeStampType }) {
         background: "#F9FAFB",
         borderRadius: "8px",
         width: "100%",
+        position: "relative",
       }}
+      className={addAnimation ? "animation-slideDown" : ""}
     >
+      <StyledIcon
+        onClick={() => {
+          setOpen(true);
+        }}
+        src="/cross.svg"
+      />
+      <ConfirmationAlert
+        title=""
+        open={open}
+        alertText="Are you sure you want to delete this timetsamp"
+        onCancel={() => {
+          setOpen(false);
+        }}
+        onConfirm={() => handleDelete()}
+      />
       <Stack direction="column" spacing={1}>
         {updateDescription ? (
           <TextField
             id="outlined-multiline-static"
-            label="Multiline"
+            label="Enter description"
             multiline
             rows={4}
-            defaultValue={timeStamp?.description || ""}
+            onChange={(e) => setDescription(e.target.value)}
+            defaultValue={description}
           />
         ) : (
           <Typography style={{ color: "#454F5B", fontSize: "14px" }}>
-            {timeStamp?.recording_time} | {timeStamp?.description}
+            {secondsToHms(timeStamp?.timestamp || 0)}
+            {` | ${timeStamp?.description || "New Timestamp"}`}
           </Typography>
         )}
         <Button
@@ -38,7 +116,11 @@ function TimeStamp({ timeStamp }: { timeStamp?: TimeStampType }) {
           style={{ borderRadius: "20px", color: "#475569" }}
           fullWidth
         >
-          {updateDescription ? "Save Description" : "Edit Description"}
+          {updateDescription
+            ? "Save Description"
+            : !timeStamp?.description
+            ? "Add Description"
+            : "Edit Description"}
         </Button>
       </Stack>
     </Box>
