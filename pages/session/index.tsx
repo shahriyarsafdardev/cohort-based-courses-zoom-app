@@ -1,8 +1,8 @@
-import React from "react";
-import SessionTab from "./SessionTab";
+import React from 'react'
+import SessionTab from './SessionTab'
 
 function index() {
-  return <SessionTab />;
+  return <SessionTab />
 }
 
-export default index;
+export default index

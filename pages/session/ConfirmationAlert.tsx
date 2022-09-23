@@ -5,50 +5,50 @@ import {
   DialogActions,
   Button,
   Typography,
-  Box,
-} from "@material-ui/core";
-import { styled } from "@material-ui/core/styles";
+  Box
+} from '@material-ui/core'
+import { styled } from '@material-ui/core/styles'
 
 type ConfirmationAlertProps = {
-  title: string;
-  alertText: JSX.Element | string;
-  open: boolean;
-  onCancel: Function;
-  onConfirm: Function;
-};
+  title: string
+  alertText: string
+  open: boolean
+  onCancel: Function
+  onConfirm: Function
+}
 
 const StyledButtonCancel = styled(Button)(({ theme }) => ({
-  borderRadius: "20px",
-  width: "90%",
-  fontSize: "14px",
-  textTransform: "none",
+  borderRadius: '20px',
+  width: '90%',
+  fontSize: '14px',
+  textTransform: 'none',
   margin: 0,
-  color: "#000000",
-}));
+  color: '#000000'
+}))
 
 const StyledButtonConfirm = styled(Button)(({ theme }) => ({
-  borderRadius: "20px",
-  backgroundColor: "#101658",
-  width: "90%",
-  fontSize: "14px",
-  textTransform: "none",
+  borderRadius: '20px',
+  backgroundColor: '#101658',
+  width: '90%',
+  fontSize: '14px',
+  textTransform: 'none',
   margin: 0,
-  "&:hover": { backgroundColor: "#101658" },
-}));
+  '&:hover': { backgroundColor: '#101658' }
+}))
 
 const ConfirmationAlert = ({
   title,
   alertText,
   onCancel,
   onConfirm,
-  open,
+  open
 }: ConfirmationAlertProps) => (
   <Dialog open={open} maxWidth="xs" fullWidth>
-    <Box style={{ padding: "16px" }}>
+    <Box style={{ padding: '16px' }}>
       {title && <DialogTitle>{title}</DialogTitle>}
       <DialogContent>
         <Typography
-          sx={{ fontWeight: 400, textAlign: "center", color: "#334155" }}
+          sx={{ fontWeight: 400, textAlign: 'center', color: '#334155' }}
         >
           {alertText}
         </Typography>
@@ -57,20 +57,20 @@ const ConfirmationAlert = ({
         <StyledButtonCancel
           variant="outlined"
           onClick={() => onCancel()}
-          style={{ width: "-webkit-fill-available" }}
+          style={{ width: '-webkit-fill-available' }}
         >
           Cancel
         </StyledButtonCancel>
         <StyledButtonConfirm
           variant="contained"
           onClick={() => onConfirm()}
-          style={{ width: "-webkit-fill-available" }}
+          style={{ width: '-webkit-fill-available' }}
         >
           Confirm
         </StyledButtonConfirm>
       </DialogActions>
     </Box>
   </Dialog>
-);
+)
 
-export default ConfirmationAlert;
+export default ConfirmationAlert
