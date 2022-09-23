@@ -14,6 +14,7 @@ import {
   IconButton,
   InputAdornment,
   FormControlLabel,
+  Typography,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 import useAuth from "../utils/hooks/useAuth";
@@ -83,6 +84,11 @@ export default function LoginForm() {
   return (
     <FormikProvider value={formik}>
       <StyledLogin autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <Typography
+          style={{ color: "#475569", fontWeight: "bold", marginBottom: "20px" }}
+        >
+          Welcome to the Sphere Zoom App
+        </Typography>
         <Stack spacing={3}>
           {errors.afterSubmit && (
             <Alert severity={color}>{errors.afterSubmit}</Alert>
