@@ -41,7 +41,7 @@ function TimeStamp({
 
     const hDisplay = h > 0 ? (m > 0 ? `${h}:` : `${h}`) : ''
     const mDisplay = m > 0 ? (s > 0 ? `${m}:` : `${m}`) : ''
-    const sDisplay = s > 0 ? `${s}` : ':00'
+    const sDisplay = s > 0 ? (h === 0 && m === 0 ? `00:${s}` : `${s}`) : ':00'
     return hDisplay + mDisplay + sDisplay
   }
 
