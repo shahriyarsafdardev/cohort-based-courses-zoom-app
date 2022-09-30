@@ -15,6 +15,7 @@ import {
   InputAdornment,
   FormControlLabel,
   Typography,
+  Box
 } from '@material-ui/core'
 import { LoadingButton } from '@material-ui/lab'
 import useAuth from '../utils/hooks/useAuth'
@@ -29,7 +30,7 @@ type InitialValues = {
 
 const StyledLogin = styled(Form)(({ theme }) => ({
   width: '100%',
-  maxWidth: '300px',
+  maxWidth: '280px'
 }))
 
 export default function LoginForm() {
@@ -42,17 +43,18 @@ export default function LoginForm() {
     email: Yup.string()
       .email('Email must be a valid email address')
       .required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string().required('Password is required')
   })
 
   const formik = useFormik<InitialValues>({
     initialValues: {
       email: '',
       password: '',
-      remember: true,
+      remember: true
     },
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
+      setSubmitting(true)
       try {
         await login(values.email, values.password).then((res: any) => {
           console.log(res)
@@ -71,7 +73,7 @@ export default function LoginForm() {
           setColor(error.color)
         }
       }
-    },
+    }
   })
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
@@ -83,11 +85,19 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
+      <Box style={{ position: 'absolute', top: '20px' }}>
+        <img src="/sphere_blue.svg" alt="logo" width="140" />
+      </Box>
       <StyledLogin autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Typography
-          style={{ color: '#475569', fontWeight: 'bold', marginBottom: '20px' }}
+          style={{
+            color: '#000000',
+            fontWeight: 600,
+            marginBottom: '20px',
+            fontSize: '18px'
+          }}
         >
-          Welcome to the Sphere Zoom App
+          Log in to your Sphere account
         </Typography>
         <Stack spacing={3}>
           {errors.afterSubmit && (
@@ -101,7 +111,19 @@ export default function LoginForm() {
             label="Email address"
             {...getFieldProps('email')}
             inputProps={{
-              'data-testid': 'email',
+              form: {
+                autocomplete: 'off'
+              }
+            }}
+            sx={{
+              background: '#ffffff !important',
+              '& input:-webkit-autofill': {
+                backgroundColor: 'white !important',
+                color: '#475569 !important'
+              },
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '10px'
+              }
             }}
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
@@ -121,7 +143,17 @@ export default function LoginForm() {
                     <Icon icon={showPassword ? eyeFill : eyeOffFill} />
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
+            }}
+            sx={{
+              background: '#ffffff !important',
+              '& input:-webkit-autofill': {
+                backgroundColor: 'white !important',
+                color: '#475569 !important'
+              },
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '10px'
+              }
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
@@ -135,11 +167,16 @@ export default function LoginForm() {
           sx={{ my: 2 }}
         >
           <FormControlLabel
+            sx={{
+              '& .MuiFormControlLabel-label': {
+                color: '#475569 !important'
+              }
+            }}
             control={
               <Checkbox
                 {...getFieldProps('remember')}
                 checked={values.remember}
-                color="default"
+                sx={{ color: '#637381 !important' }}
               />
             }
             label="Remember me"
