@@ -13,6 +13,8 @@ import TimeStamp from './Timestamp'
 import { TimeStampType, ActiveSession } from '../../utils/types/user'
 import axios from '../../utils/axios'
 import zoomSdk from '@zoom/appssdk'
+import { AuthProvider } from '../../utils/context/JWTContext'
+import AuthGuard from '../AuthGuard'
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#101658',
@@ -61,13 +63,12 @@ function SessionTab() {
   const first = useRef(false)
 
   const configureApp = async () => {
-    await zoomSdk.config({
+    const res = await zoomSdk.config({
       popoutSize: { width: 480, height: 360 },
-      capabilities: ['getRunningContext', 'getMeetingContext']
+      capabilities: ['getRunningContext']
     })
+    const context = await zoomSdk.getRunningContext()
   }
-
-  console.log(process.platform)
 
   useEffect(() => {
     configureApp()

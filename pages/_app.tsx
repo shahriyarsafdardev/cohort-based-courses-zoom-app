@@ -2,7 +2,6 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import styles from '../styles/Home.module.css'
 import React, { useEffect } from 'react'
-import AuthGuard from './AuthGuard'
 import { AuthProvider } from '../utils/context/JWTContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -17,9 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div className={styles.container}>
       <main className={styles.main}>
         <AuthProvider>
-          <AuthGuard>
-            <Component {...pageProps} />
-          </AuthGuard>
+          <Component {...pageProps} />
         </AuthProvider>
       </main>
     </div>
