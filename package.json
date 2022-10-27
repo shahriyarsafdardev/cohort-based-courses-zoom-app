@@ -1,5 +1,5 @@
 {
-  "name": "ss_zoom_app",
+  "name": "sphere_zoom_app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -24,6 +24,7 @@
     "@material-ui/styles": "^5.0.0-beta.2",
     "@material-ui/system": "^5.0.0-beta.2",
     "@material-ui/utils": "^5.0.0-beta.1",
+    "@zoom/appssdk": "^0.16.6",
     "axios": "^0.27.2",
     "formik": "^2.2.9",
     "jsonwebtoken": "^8.5.1",

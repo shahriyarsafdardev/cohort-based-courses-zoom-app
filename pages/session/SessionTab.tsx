@@ -4,7 +4,7 @@ import {
   Typography,
   Box,
   CircularProgress,
-  Theme,
+  Theme
 } from '@material-ui/core'
 import { styled } from '@material-ui/core/styles'
 import { makeStyles } from '@material-ui/styles'
@@ -12,6 +12,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import TimeStamp from './Timestamp'
 import { TimeStampType, ActiveSession } from '../../utils/types/user'
 import axios from '../../utils/axios'
+import zoomSdk from '@zoom/appssdk'
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#101658',
@@ -20,14 +21,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
   textTransform: 'none',
   margin: 0,
-  '&:hover': { backgroundColor: '#101658' },
+  '&:hover': { backgroundColor: '#101658' }
 }))
 
 const StyledPage = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100vh',
+  height: '100vh'
 }))
 
 const StyledStack = styled(Stack)(({ theme }) => ({
@@ -37,17 +38,17 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   padding: '25px',
   width: '100%',
   [theme.breakpoints.up('md')]: {
-    width: '50%',
-  },
+    width: '50%'
+  }
 }))
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonSubmitted: {
-    backgroundColor: '#147A16 !important',
+    backgroundColor: '#147A16 !important'
   },
   buttonSubmit: {
-    backgroundColor: '#101658 !important',
-  },
+    backgroundColor: '#101658 !important'
+  }
 }))
 
 function SessionTab() {
@@ -59,6 +60,19 @@ function SessionTab() {
   const classes = useStyles()
   const first = useRef(false)
 
+  const configureApp = async () => {
+    await zoomSdk.config({
+      popoutSize: { width: 480, height: 360 },
+      capabilities: ['getRunningContext', 'getMeetingContext']
+    })
+  }
+
+  console.log(process.platform)
+
+  useEffect(() => {
+    configureApp()
+  }, [])
+
   const handleAddTimestamp = () => {
     first.current = true
     setIsSubmitting(true)
@@ -66,13 +80,13 @@ function SessionTab() {
       axios
         .post('/session_timestamps/add_timestamp.json', {
           session_id: activeSession?.id,
-          session_time: activeSession?.session_time,
+          session_time: activeSession?.session_time
         })
         .then(
           (response) => {
             setSessionTimestamps([
               response.data.timestamp,
-              ...sessionTimestamps,
+              ...sessionTimestamps
             ])
           },
           (error) => {
@@ -141,7 +155,7 @@ function SessionTab() {
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.08)',
               padding: '25px',
               background: '#ffffff',
-              zIndex: '2',
+              zIndex: '2'
             }}
           >
             <Stack direction="column" spacing={2} alignItems="center">
@@ -150,7 +164,7 @@ function SessionTab() {
                 style={{
                   textAlign: 'center',
                   margin: '32px 0px',
-                  color: '#333333',
+                  color: '#333333'
                 }}
               >
                 Timestamps allow you to easily save points in your sessions so
@@ -173,7 +187,7 @@ function SessionTab() {
                     borderTop: '2px solid #E2E8F0',
                     borderRadius: '20px',
                     width: '300px',
-                    height: '0px',
+                    height: '0px'
                   }}
                 />
                 <Typography style={{ color: '#334155', fontWeight: 'bold' }}>

@@ -24,14 +24,14 @@ MyDocument.getInitialProps = async (ctx) => {
   const originalRenderPage = ctx.renderPage
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />)
     })
   const initialProps = await Document.getInitialProps(ctx)
   return {
     ...initialProps,
     styles: [
       ...React.Children.toArray(initialProps.styles),
-      sheets.getStyleElement(),
-    ],
+      sheets.getStyleElement()
+    ]
   }
 }
