@@ -1,4 +1,3 @@
-import React from 'react'
 import SessionTab from './SessionTab'
 
 function index() {
