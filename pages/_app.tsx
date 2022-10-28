@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app'
 import styles from '../styles/Home.module.css'
 import React, { useEffect } from 'react'
 import { AuthProvider } from '../utils/context/JWTContext'
+import AuthGuard from './AuthGuard'
+import { useRouter } from 'next/router'
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -12,12 +14,22 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [])
 
+  const router = useRouter()
+
+  const code = router.pathname
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <AuthProvider>
+        {code !== '/auth' ? (
+          <AuthProvider>
+            <AuthGuard>
+              <Component {...pageProps} />
+            </AuthGuard>
+          </AuthProvider>
+        ) : (
           <Component {...pageProps} />
-        </AuthProvider>
+        )}
       </main>
     </div>
   )

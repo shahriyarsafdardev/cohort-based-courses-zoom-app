@@ -13,8 +13,6 @@ import TimeStamp from './Timestamp'
 import { TimeStampType, ActiveSession } from '../../utils/types/user'
 import axios from '../../utils/axios'
 import zoomSdk from '@zoom/appssdk'
-import { AuthProvider } from '../../utils/context/JWTContext'
-import AuthGuard from '../AuthGuard'
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#101658',
