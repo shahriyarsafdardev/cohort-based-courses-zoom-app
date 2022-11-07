@@ -28,17 +28,80 @@ const StyledPage = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  height: '100vh'
+  height: '100vh',
+  width: '100%',
+  overflowY: 'hidden'
 }))
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  justifyContent: 'center',
   padding: '25px',
   width: '100%',
-  [theme.breakpoints.up('md')]: {
+  height: '100%',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    height: '45vh'
+  }
+}))
+
+const StyledTimestampHeader = styled(Stack)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
     width: '50%'
+  }
+}))
+
+const StyledTimestamps = styled(Stack)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '25px',
+  width: '100%',
+  overflowX: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
+  }
+}))
+
+const StyledTimestampsMobile = styled(Stack)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '25px',
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    display: 'none'
+  }
+}))
+
+const SavedTimestamps = styled(Stack)(({ theme }) => ({
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.08)',
+  background: '#ffffff',
+  zIndex: '2',
+  height: '48px',
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
+  }
+}))
+
+const StyledContainer = styled(Stack)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row'
+  }
+}))
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  justifyContent: 'center',
+  [theme.breakpoints.up('sm')]: {
+    display: 'none'
   }
 }))
 
@@ -147,7 +210,7 @@ function SessionTab() {
   return (
     <StyledPage>
       {activeSession && activeSession.id ? (
-        <>
+        <StyledContainer alignItems="center">
           <StyledStack
             spacing={2}
             sx={{
@@ -157,7 +220,11 @@ function SessionTab() {
               zIndex: '2'
             }}
           >
-            <Stack direction="column" spacing={2} alignItems="center">
+            <StyledTimestampHeader
+              direction="column"
+              spacing={2}
+              alignItems="center"
+            >
               <img src="/sphere_blue.svg" alt="logo" width="140" />
               <Typography
                 style={{
@@ -178,9 +245,9 @@ function SessionTab() {
               >
                 {isSubmitting ? 'Timestamp saved!' : 'Save Timestamp'}
               </StyledButton>
-            </Stack>
+            </StyledTimestampHeader>
             {sessionTimestamps.length > 0 && (
-              <>
+              <StyledBox>
                 <Box
                   style={{
                     borderTop: '2px solid #E2E8F0',
@@ -189,16 +256,22 @@ function SessionTab() {
                     height: '0px'
                   }}
                 />
-                <Typography style={{ color: '#334155', fontWeight: 'bold' }}>
+                <Typography
+                  style={{
+                    color: '#334155',
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                  }}
+                >
                   Saved Timestamps
                 </Typography>
-              </>
+              </StyledBox>
             )}
           </StyledStack>
-          <StyledStack
+          <StyledTimestampsMobile
             spacing={2}
             key={sessionTimestamps?.length}
-            sx={{ height: '100vh', overflowY: 'scroll' }}
+            sx={{ height: '55vh', overflowY: 'scroll' }}
           >
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp, i) => {
@@ -213,8 +286,39 @@ function SessionTab() {
                   />
                 )
               })}
-          </StyledStack>
-        </>
+          </StyledTimestampsMobile>
+          <Box
+            sx={{
+              width: '100%'
+            }}
+          >
+            <SavedTimestamps>
+              <Typography style={{ color: '#334155', fontWeight: 'bold' }}>
+                Saved Timestamps
+              </Typography>
+            </SavedTimestamps>
+
+            <StyledTimestamps
+              spacing={2}
+              key={sessionTimestamps?.length}
+              sx={{ height: '94vh', overflowY: 'scroll' }}
+            >
+              {sessionTimestamps &&
+                sessionTimestamps.map((timestamp, i) => {
+                  return (
+                    <TimeStamp
+                      timeStamp={timestamp}
+                      key={timestamp?.id}
+                      updateTimestamps={handleUpdateTimestamp}
+                      setActiveSession={setActiveSession}
+                      deleteTimestamp={handleDeleteTimestamp}
+                      addAnimation={first.current && i === 0}
+                    />
+                  )
+                })}
+            </StyledTimestamps>
+          </Box>
+        </StyledContainer>
       ) : (
         <Typography
           style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
