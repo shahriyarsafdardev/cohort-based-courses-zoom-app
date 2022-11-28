@@ -8,7 +8,7 @@ import {
   ActionMap,
   AuthState,
   AuthUser,
-  JWTContextType,
+  JWTContextType
 } from '../types/authentication'
 
 // ----------------------------------------------------------------------
@@ -17,7 +17,7 @@ enum Types {
   Initial = 'INITIALIZE',
   Login = 'LOGIN',
   Logout = 'LOGOUT',
-  Register = 'REGISTER',
+  Register = 'REGISTER'
 }
 
 type JWTAuthPayload = {
@@ -40,7 +40,7 @@ export type JWTActions =
 const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null,
+  user: null
 }
 
 const JWTReducer = (state: AuthState, action: JWTActions) => {
@@ -51,30 +51,29 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
       newUser = {
         ...newUser,
         displayName: `${newUser?.first_name} ${newUser?.last_name}`,
-        photoURL: newUser?.profile_image_url,
+        photoURL: newUser?.profile_image_url
       }
       return {
         isAuthenticated: action.payload.isAuthenticated,
         isInitialized: true,
-        user: newUser,
+        user: newUser
       }
     case 'LOGIN':
       newUser = action.payload.user
       newUser = {
         ...newUser,
         displayName: `${newUser?.first_name} ${newUser?.last_name}`,
-        photoURL: newUser?.profile_image_url,
+        photoURL: newUser?.profile_image_url
       }
       return {
         ...state,
         isAuthenticated: true,
-        user: newUser,
+        user: newUser
       }
     case 'LOGOUT':
       return {
         ...state,
-        isAuthenticated: false,
-        user: null,
+        isAuthenticated: false
       }
 
     case 'REGISTER':
@@ -82,12 +81,12 @@ const JWTReducer = (state: AuthState, action: JWTActions) => {
       newUser = {
         ...newUser,
         displayName: `${newUser?.first_name} ${newUser?.last_name}`,
-        photoURL: newUser?.profile_image_url,
+        photoURL: newUser?.profile_image_url
       }
       return {
         ...state,
         isAuthenticated: true,
-        user: newUser,
+        user: newUser
       }
 
     default:
@@ -116,8 +115,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             type: Types.Initial,
             payload: {
               isAuthenticated: true,
-              user,
-            },
+              user
+            }
           })
           router.push('/session')
         } else {
@@ -125,8 +124,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
             type: Types.Initial,
             payload: {
               isAuthenticated: false,
-              user: null,
-            },
+              user: null
+            }
           })
         }
       } catch (err) {
@@ -135,8 +134,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
           type: Types.Initial,
           payload: {
             isAuthenticated: false,
-            user: null,
-          },
+            user: null
+          }
         })
       }
     }
@@ -147,7 +146,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const response = await axios.post(`/users/login`, {
       email,
-      password,
+      password
     })
 
     const { accessToken, user } = response.data
@@ -156,8 +155,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({
       type: Types.Login,
       payload: {
-        user,
-      },
+        user
+      }
     })
   }
 
@@ -171,7 +170,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
       firstName,
-      lastName,
+      lastName
     })
     const { accessToken, user } = response.data
 
@@ -179,20 +178,20 @@ function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({
       type: Types.Register,
       payload: {
-        user,
-      },
+        user
+      }
     })
   }
 
   const logout = async () => {
     setSession(null)
     dispatch({ type: Types.Logout })
-    router.push('/')
+    router.push('/', undefined, { shallow: true })
   }
 
   const resetPassword = async (email: string) => {
     const response = await axios.post(`/users/reset_password`, {
-      email,
+      email
     })
   }
 
@@ -202,13 +201,13 @@ function AuthProvider({ children }: { children: ReactNode }) {
   ) => {
     const response = await axios.post(`/users/update_password.json`, {
       password,
-      reset_password_token,
+      reset_password_token
     })
   }
 
   const changePassword = async (password: string) => {
     const response = await axios.post(`/users/change_password`, {
-      password,
+      password
     })
   }
 
@@ -221,8 +220,8 @@ function AuthProvider({ children }: { children: ReactNode }) {
       type: Types.Initial,
       payload: {
         isAuthenticated: true,
-        user,
-      },
+        user
+      }
     })
   }
 
@@ -237,7 +236,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
         resetPassword,
         updateProfile,
         changePassword,
-        updatePassword,
+        updatePassword
       }}
     >
       {children}
