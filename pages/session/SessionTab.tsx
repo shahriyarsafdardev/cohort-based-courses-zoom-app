@@ -14,11 +14,12 @@ import { TimeStampType, ActiveSession } from '../../utils/types/user'
 import axios from '../../utils/axios'
 import zoomSdk from '@zoom/appssdk'
 import useAuth from '../../utils/hooks/useAuth'
+import ConfirmationAlert from './ConfirmationAlert'
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#101658',
   borderRadius: '20px',
-  width: '90%',
+  width: '100%',
   fontSize: '14px',
   textTransform: 'none',
   margin: 0,
@@ -44,7 +45,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   height: '100%',
   [theme.breakpoints.down('sm')]: {
     width: '100%',
-    height: '50vh'
+    height: '288px'
   }
 }))
 
@@ -59,6 +60,15 @@ const NavHeading = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
   fontWeight: 500,
   color: '#101658',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '14px'
+  }
+}))
+
+const TimestampDescription = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  color: '#333333',
+  fontSize: '16px',
   [theme.breakpoints.down('sm')]: {
     fontSize: '14px'
   }
@@ -130,7 +140,7 @@ const TopHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center'
 }))
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Stack)(({ theme }) => ({
   justifyContent: 'center',
   [theme.breakpoints.up('sm')]: {
     display: 'none'
@@ -155,6 +165,7 @@ function SessionTab() {
   const classes = useStyles()
   const first = useRef(false)
   const { user, logout } = useAuth()
+  const [open, setOpen] = useState(false)
 
   const configureApp = async () => {
     const res = await zoomSdk.config({
@@ -242,6 +253,15 @@ function SessionTab() {
 
   return (
     <StyledPage>
+      <ConfirmationAlert
+        title=""
+        open={open}
+        alertText="Are you sure you want to log out?"
+        onCancel={() => {
+          setOpen(false)
+        }}
+        onConfirm={() => logout()}
+      />
       {activeSession && activeSession.id ? (
         <StyledContainer alignItems="center">
           <StyledStack
@@ -262,9 +282,13 @@ function SessionTab() {
                   alignItems: 'center',
                   cursor: 'pointer'
                 }}
-                onClick={() => logout()}
+                onClick={() => setOpen(true)}
               >
-                <NavHeading style={{ fontWeight: 'bold' }}>Logout</NavHeading>
+                <NavHeading
+                  style={{ fontWeight: 'bold', textDecoration: 'underline' }}
+                >
+                  Logout
+                </NavHeading>
                 <img
                   src="/logout.svg"
                   alt="logout"
@@ -274,20 +298,14 @@ function SessionTab() {
             </TopHeader>
             <StyledTimestampHeader
               direction="column"
-              spacing={2}
+              spacing={3}
               alignItems="center"
             >
               <StyledLogo src="/sphere_blue.svg" alt="logo" />
-              <Typography
-                style={{
-                  textAlign: 'center',
-                  margin: '32px 0px',
-                  color: '#333333'
-                }}
-              >
+              <TimestampDescription>
                 Timestamps allow you to easily save points in your sessions so
                 that you can review them later!
-              </Typography>
+              </TimestampDescription>
               <StyledButton
                 variant="contained"
                 onClick={handleAddTimestamp}
@@ -297,28 +315,28 @@ function SessionTab() {
               >
                 {isSubmitting ? 'Timestamp saved!' : 'Save Timestamp'}
               </StyledButton>
+              {sessionTimestamps.length > 0 && (
+                <StyledBox spacing={3}>
+                  <Box
+                    style={{
+                      borderTop: '2px solid #E2E8F0',
+                      borderRadius: '20px',
+                      width: '300px',
+                      height: '0px'
+                    }}
+                  />
+                  <Typography
+                    style={{
+                      color: '#334155',
+                      fontWeight: 'bold',
+                      textAlign: 'center'
+                    }}
+                  >
+                    Saved Timestamps
+                  </Typography>
+                </StyledBox>
+              )}
             </StyledTimestampHeader>
-            {sessionTimestamps.length > 0 && (
-              <StyledBox>
-                <Box
-                  style={{
-                    borderTop: '2px solid #E2E8F0',
-                    borderRadius: '20px',
-                    width: '300px',
-                    height: '0px'
-                  }}
-                />
-                <Typography
-                  style={{
-                    color: '#334155',
-                    fontWeight: 'bold',
-                    textAlign: 'center'
-                  }}
-                >
-                  Saved Timestamps
-                </Typography>
-              </StyledBox>
-            )}
           </StyledStack>
           <StyledTimestampsMobile
             spacing={2}
@@ -381,9 +399,13 @@ function SessionTab() {
                 alignItems: 'center',
                 cursor: 'pointer'
               }}
-              onClick={() => logout()}
+              onClick={() => setOpen(true)}
             >
-              <NavHeading style={{ fontWeight: 'bold' }}>Logout</NavHeading>
+              <NavHeading
+                style={{ fontWeight: 'bold', textDecoration: 'underline' }}
+              >
+                Logout
+              </NavHeading>
               <img
                 src="/logout.svg"
                 alt="logout"
