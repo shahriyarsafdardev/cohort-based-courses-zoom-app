@@ -4,6 +4,7 @@ import { Box, Typography, Stack, Button, TextField } from '@material-ui/core'
 import axios from '../../utils/axios'
 import { styled } from '@material-ui/core/styles'
 import ConfirmationAlert from './ConfirmationAlert'
+import { makeStyles } from '@material-ui/styles'
 
 const StyledIcon = styled('img')(() => ({
   width: 24,
@@ -12,6 +13,12 @@ const StyledIcon = styled('img')(() => ({
   top: '5px',
   right: '5px',
   cursor: 'pointer'
+}))
+
+const useStyles = makeStyles((theme) => ({
+  input: {
+    background: '#FFFFFF'
+  }
 }))
 
 function TimeStamp({
@@ -32,17 +39,21 @@ function TimeStamp({
     timeStamp?.description || ''
   )
   const [open, setOpen] = useState(false)
+  const classes = useStyles()
 
   function secondsToHms(d: any) {
-    d = Number(d)
-    const h = Math.floor(d / 3600)
-    const m = Math.floor((d % 3600) / 60)
-    const s = Math.floor((d % 3600) % 60)
+    const secs = Number(d)
 
-    const hDisplay = h > 0 ? (m > 0 ? `${h}:` : `${h}`) : ''
-    const mDisplay = m > 0 ? (s > 0 ? `${m}:` : `${m}`) : ''
-    const sDisplay = s > 0 ? (h === 0 && m === 0 ? `00:${s}` : `${s}`) : ':00'
-    return hDisplay + mDisplay + sDisplay
+    const h = Math.floor(secs / 3600)
+    let result = ''
+
+    if (h > 0) {
+      result = new Date(secs * 1000).toISOString().slice(11, 19)
+    } else {
+      result = new Date(secs * 1000).toISOString().slice(14, 19)
+    }
+
+    return result
   }
 
   const handleSubmit = () => {
@@ -94,33 +105,47 @@ function TimeStamp({
         }}
         onConfirm={() => handleDelete()}
       />
-      <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1.5}>
         {updateDescription ? (
-          <TextField
-            id="outlined-multiline-static"
-            label="Enter description"
-            multiline
-            rows={4}
-            onChange={(e) => setDescription(e.target.value)}
-            defaultValue={description}
-          />
+          <>
+            <Typography
+              style={{ color: '#454F5B', fontSize: '14px', fontWeight: 'bold' }}
+            >
+              {secondsToHms(timeStamp?.timestamp || 0)}
+            </Typography>
+            <TextField
+              id="outlined-multiline-static"
+              placeholder="Add a description here to help you remember what this timestamp refers to..."
+              multiline
+              rows={4}
+              onChange={(e) => setDescription(e.target.value)}
+              defaultValue={description}
+              InputProps={{ className: classes.input }}
+            />
+          </>
         ) : (
           <Typography style={{ color: '#454F5B', fontSize: '14px' }}>
-            {secondsToHms(timeStamp?.timestamp || 0)}
+            <span style={{ fontWeight: 'bold' }}>
+              {secondsToHms(timeStamp?.timestamp || 0)}
+            </span>
             {` | ${timeStamp?.description || 'New Timestamp'}`}
           </Typography>
         )}
         <Button
           onClick={handleSubmit}
           variant="outlined"
-          style={{ borderRadius: '20px', color: '#475569' }}
+          style={{
+            borderRadius: '20px',
+            color: '#475569',
+            textTransform: 'none'
+          }}
           fullWidth
         >
           {updateDescription
-            ? 'Save Description'
+            ? 'Save description'
             : !timeStamp?.description
-            ? 'Add Description'
-            : 'Edit Description'}
+            ? 'Add description'
+            : 'Edit description'}
         </Button>
       </Stack>
     </Box>
