@@ -13,6 +13,7 @@ import TimeStamp from './Timestamp'
 import { TimeStampType, ActiveSession } from '../../utils/types/user'
 import axios from '../../utils/axios'
 import zoomSdk from '@zoom/appssdk'
+import useAuth from '../../utils/hooks/useAuth'
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#101658',
@@ -43,13 +44,30 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   height: '100%',
   [theme.breakpoints.down('sm')]: {
     width: '100%',
-    height: '45vh'
+    height: '50vh'
   }
 }))
 
 const StyledTimestampHeader = styled(Stack)(({ theme }) => ({
-  [theme.breakpoints.up('sm')]: {
-    width: '50%'
+  width: '50%',
+  [theme.breakpoints.down('md')]: {
+    width: '100%'
+  }
+}))
+
+const NavHeading = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: 500,
+  color: '#101658',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '14px'
+  }
+}))
+
+const StyledLogo = styled('img')(({ theme }) => ({
+  width: '140',
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
   }
 }))
 
@@ -93,9 +111,23 @@ const StyledContainer = styled(Stack)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
+  position: 'relative',
   [theme.breakpoints.up('sm')]: {
     flexDirection: 'row'
   }
+}))
+
+const TopHeader = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  height: '48px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.08)',
+  background: '#ffffff',
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: '15px',
+  alignItems: 'center'
 }))
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -122,6 +154,7 @@ function SessionTab() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const classes = useStyles()
   const first = useRef(false)
+  const { user, logout } = useAuth()
 
   const configureApp = async () => {
     const res = await zoomSdk.config({
@@ -217,15 +250,34 @@ function SessionTab() {
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.08)',
               padding: '25px',
               background: '#ffffff',
-              zIndex: '2'
+              zIndex: '2',
+              position: 'relative'
             }}
           >
+            <TopHeader>
+              <NavHeading>{user?.email}</NavHeading>
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer'
+                }}
+                onClick={() => logout()}
+              >
+                <NavHeading style={{ fontWeight: 'bold' }}>Logout</NavHeading>
+                <img
+                  src="/logout.svg"
+                  alt="logout"
+                  style={{ marginLeft: '5px' }}
+                />
+              </Box>
+            </TopHeader>
             <StyledTimestampHeader
               direction="column"
               spacing={2}
               alignItems="center"
             >
-              <img src="/sphere_blue.svg" alt="logo" width="140" />
+              <StyledLogo src="/sphere_blue.svg" alt="logo" />
               <Typography
                 style={{
                   textAlign: 'center',
@@ -320,11 +372,31 @@ function SessionTab() {
           </Box>
         </StyledContainer>
       ) : (
-        <Typography
-          style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
-        >
-          No sessions live at the moment
-        </Typography>
+        <>
+          <TopHeader>
+            <NavHeading>{user?.email}</NavHeading>
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+              onClick={() => logout()}
+            >
+              <NavHeading style={{ fontWeight: 'bold' }}>Logout</NavHeading>
+              <img
+                src="/logout.svg"
+                alt="logout"
+                style={{ marginLeft: '5px' }}
+              />
+            </Box>
+          </TopHeader>
+          <Typography
+            style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
+          >
+            No sessions live at the moment
+          </Typography>
+        </>
       )}
     </StyledPage>
   )

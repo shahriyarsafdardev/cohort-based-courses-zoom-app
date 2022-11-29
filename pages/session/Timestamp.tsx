@@ -88,7 +88,7 @@ function TimeStamp({
       <ConfirmationAlert
         title=""
         open={open}
-        alertText="Are you sure you want to delete this timetsamp"
+        alertText="Are you sure you want to delete this timestamp?"
         onCancel={() => {
           setOpen(false)
         }}
