@@ -35,20 +35,6 @@ const StyledPage = styled(Box)(({ theme }) => ({
   overflowY: 'hidden'
 }))
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '25px',
-  width: '100%',
-  height: '100%',
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    height: '288px'
-  }
-}))
-
 const StyledTimestampHeader = styled(Stack)(({ theme }) => ({
   width: '50%',
   [theme.breakpoints.down('md')]: {
@@ -175,6 +161,21 @@ function SessionTab() {
     const context = await zoomSdk.getRunningContext()
   }
 
+  const StyledStack = styled(Stack)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '25px',
+    width: '100%',
+    height: '100%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: '288px',
+      justifyContent: `${sessionTimestamps.length > 0 ? 'flex-end' : 'center'}`
+    }
+  }))
+
   useEffect(() => {
     configureApp()
   }, [])
@@ -268,7 +269,7 @@ function SessionTab() {
             spacing={2}
             sx={{
               boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.08)',
-              padding: '25px',
+              padding: '0px 25px',
               background: '#ffffff',
               zIndex: '2',
               position: 'relative'
@@ -316,7 +317,7 @@ function SessionTab() {
                 {isSubmitting ? 'Timestamp saved!' : 'Save Timestamp'}
               </StyledButton>
               {sessionTimestamps.length > 0 && (
-                <StyledBox spacing={3}>
+                <StyledBox>
                   <Box
                     style={{
                       borderTop: '2px solid #E2E8F0',
@@ -329,7 +330,8 @@ function SessionTab() {
                     style={{
                       color: '#334155',
                       fontWeight: 'bold',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      margin: '16px 0px'
                     }}
                   >
                     Saved Timestamps
@@ -341,7 +343,7 @@ function SessionTab() {
           <StyledTimestampsMobile
             spacing={2}
             key={sessionTimestamps?.length}
-            sx={{ height: '55vh', overflowY: 'scroll' }}
+            sx={{ height: '69vh', overflowY: 'scroll' }}
           >
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp, i) => {
