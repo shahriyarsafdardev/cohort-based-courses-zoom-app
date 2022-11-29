@@ -58,7 +58,10 @@ const StyledTimestampHeader = styled(Stack)(({ theme }) => ({
 const NavHeading = styled(Typography)(({ theme }) => ({
   fontSize: '16px',
   fontWeight: 500,
-  color: '#101658'
+  color: '#101658',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '14px'
+  }
 }))
 
 const StyledLogo = styled('img')(({ theme }) => ({
@@ -369,11 +372,31 @@ function SessionTab() {
           </Box>
         </StyledContainer>
       ) : (
-        <Typography
-          style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
-        >
-          No sessions live at the moment
-        </Typography>
+        <>
+          <TopHeader>
+            <NavHeading>{user?.email}</NavHeading>
+            <Box
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+              onClick={() => logout()}
+            >
+              <NavHeading style={{ fontWeight: 'bold' }}>Logout</NavHeading>
+              <img
+                src="/logout.svg"
+                alt="logout"
+                style={{ marginLeft: '5px' }}
+              />
+            </Box>
+          </TopHeader>
+          <Typography
+            style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
+          >
+            No sessions live at the moment
+          </Typography>
+        </>
       )}
     </StyledPage>
   )
