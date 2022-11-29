@@ -343,7 +343,7 @@ function SessionTab() {
           <StyledTimestampsMobile
             spacing={2}
             key={sessionTimestamps?.length}
-            sx={{ height: '69vh', overflowY: 'scroll' }}
+            sx={{ height: '50vh', overflowY: 'scroll' }}
           >
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp, i) => {
