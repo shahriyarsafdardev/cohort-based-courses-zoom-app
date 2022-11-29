@@ -133,12 +133,60 @@ const StyledBox = styled(Stack)(({ theme }) => ({
   }
 }))
 
+const EmptyStateButton = styled(Button)(({ theme }) => ({
+  borderRadius: '30px',
+    height: '48px',
+    width: '50%',
+    margin: 'auto !important',
+    marginTop: '24px !important',
+    textTransform: 'inherit',
+    [theme.breakpoints.down('lg')]: {
+      width: '70%'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '95%'
+    }
+}))
+
+const EmptyStateStack = styled(Stack)(({ theme }) => ({
+  width: '50%',
+  margin: 'auto',
+  padding: '24px',
+  [theme.breakpoints.down('md')]: {
+    width: '80%'
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: '16px',
+    width: '100%'
+  }
+}))
+
 const useStyles = makeStyles((theme: Theme) => ({
   buttonSubmitted: {
     backgroundColor: '#147A16 !important'
   },
   buttonSubmit: {
     backgroundColor: '#101658 !important'
+  },
+  emptyStateText: {
+    color: '#333333',
+    fontSize: '16px',
+    lineHeight: '24px',
+    textAlign: 'center'
+  },
+  containedButton: {
+    backgroundColor: '#101658',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#101658'
+    }
+  },
+  outlinedButton: {
+    color: '#101658',
+    borderColor: '#101658',
+    '&:hover': {
+      borderColor: '#101658'
+    }
   }
 }))
 
@@ -343,7 +391,7 @@ function SessionTab() {
           <StyledTimestampsMobile
             spacing={2}
             key={sessionTimestamps?.length}
-            sx={{ height: '50vh', overflowY: 'scroll' }}
+            sx={{ height: '56vh', overflowY: 'scroll' }}
           >
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp, i) => {
@@ -415,11 +463,30 @@ function SessionTab() {
               />
             </Box>
           </TopHeader>
-          <Typography
-            style={{ color: '#334155', fontWeight: 'bold', margin: 'auto' }}
-          >
-            No sessions live at the moment
-          </Typography>
+          <EmptyStateStack spacing={3}>
+            <Typography className={classes.emptyStateText}>
+              Once your Sphere live session starts, you will be able to use this app to save your timestamps and notes.
+            </Typography>
+            <Typography className={classes.emptyStateText}>
+              Until then, you can use the Sphere Portal to review previously saved timestamps and session materials.
+            </Typography>
+            <Stack spacing={1}>
+              <EmptyStateButton
+                variant="contained"
+                className={classes.containedButton}
+                onClick={() => window.open('https://portal.getsphere.com', '_blank')}
+              >
+                Go to Sphere Portal
+              </EmptyStateButton>
+              <EmptyStateButton
+                variant="outlined"
+                className={classes.outlinedButton}
+                onClick={() => window.open('https://drive.google.com/file/d/1pNXGlh2UOy_0y-t6N6upyRz_fQoHPwjO/view?usp=sharing', '_blank')}
+              >
+                Learn more about Sphere Timestamps
+              </EmptyStateButton>
+            </Stack>
+          </EmptyStateStack>
         </>
       )}
     </StyledPage>
