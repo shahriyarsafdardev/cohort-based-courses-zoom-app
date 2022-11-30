@@ -226,7 +226,7 @@ function SessionTab() {
   }))
 
   useEffect(() => {
-    // configureApp()
+    configureApp()
   }, [])
 
   const handleAddTimestamp = () => {
@@ -473,7 +473,7 @@ function SessionTab() {
               Until then, you can use the Sphere Portal to review previously
               saved timestamps and session materials.
             </Typography>
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <EmptyStateButton
                 variant="contained"
                 className={classes.containedButton}
@@ -495,7 +495,7 @@ function SessionTab() {
               >
                 Learn more about Sphere Timestamps
               </EmptyStateButton>
-            </Stack>
+            </Stack> */}
           </EmptyStateStack>
         </>
       )}
