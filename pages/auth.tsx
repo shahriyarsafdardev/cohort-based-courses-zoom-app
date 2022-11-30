@@ -46,7 +46,7 @@ const StyledImage = styled('img')(({ theme }) => ({
     display: 'none'
   },
   [theme.breakpoints.down('lg')]: {
-    maxHeight: '60%'
+    maxHeight: '70%'
   }
 }))
 

@@ -85,6 +85,7 @@ const StyledTimestampsMobile = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   padding: '25px',
   width: '100%',
+  height: `calc(100vh - 288px)`,
   [theme.breakpoints.up('sm')]: {
     display: 'none'
   }
@@ -135,17 +136,17 @@ const StyledBox = styled(Stack)(({ theme }) => ({
 
 const EmptyStateButton = styled(Button)(({ theme }) => ({
   borderRadius: '30px',
-    height: '48px',
-    width: '50%',
-    margin: 'auto !important',
-    marginTop: '24px !important',
-    textTransform: 'inherit',
-    [theme.breakpoints.down('lg')]: {
-      width: '70%'
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '95%'
-    }
+  height: '48px',
+  width: '50%',
+  margin: 'auto !important',
+  marginTop: '24px !important',
+  textTransform: 'inherit',
+  [theme.breakpoints.down('lg')]: {
+    width: '70%'
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '95%'
+  }
 }))
 
 const EmptyStateStack = styled(Stack)(({ theme }) => ({
@@ -225,7 +226,7 @@ function SessionTab() {
   }))
 
   useEffect(() => {
-    configureApp()
+    // configureApp()
   }, [])
 
   const handleAddTimestamp = () => {
@@ -362,7 +363,7 @@ function SessionTab() {
                   isSubmitting ? classes.buttonSubmitted : classes.buttonSubmit
                 }
               >
-                {isSubmitting ? 'Timestamp saved!' : 'Save Timestamp'}
+                {isSubmitting ? 'Timestamp saved!' : 'Add New Timestamp'}
               </StyledButton>
               {sessionTimestamps.length > 0 && (
                 <StyledBox>
@@ -391,7 +392,7 @@ function SessionTab() {
           <StyledTimestampsMobile
             spacing={2}
             key={sessionTimestamps?.length}
-            sx={{ height: '56vh', overflowY: 'scroll' }}
+            sx={{ overflowY: 'scroll' }}
           >
             {sessionTimestamps &&
               sessionTimestamps.map((timestamp, i) => {
@@ -421,7 +422,7 @@ function SessionTab() {
             <StyledTimestamps
               spacing={2}
               key={sessionTimestamps?.length}
-              sx={{ height: '94vh', overflowY: 'scroll' }}
+              sx={{ height: `calc(100vh - 48px)`, overflowY: 'scroll' }}
             >
               {sessionTimestamps &&
                 sessionTimestamps.map((timestamp, i) => {
@@ -465,23 +466,32 @@ function SessionTab() {
           </TopHeader>
           <EmptyStateStack spacing={3}>
             <Typography className={classes.emptyStateText}>
-              Once your Sphere live session starts, you will be able to use this app to save your timestamps and notes.
+              Once your Sphere live session starts, you will be able to use this
+              app to save your timestamps and notes.
             </Typography>
             <Typography className={classes.emptyStateText}>
-              Until then, you can use the Sphere Portal to review previously saved timestamps and session materials.
+              Until then, you can use the Sphere Portal to review previously
+              saved timestamps and session materials.
             </Typography>
             <Stack spacing={1}>
               <EmptyStateButton
                 variant="contained"
                 className={classes.containedButton}
-                onClick={() => window.open('https://portal.getsphere.com', '_blank')}
+                onClick={() =>
+                  window.open('https://portal.getsphere.com', '_blank')
+                }
               >
                 Go to Sphere Portal
               </EmptyStateButton>
               <EmptyStateButton
                 variant="outlined"
                 className={classes.outlinedButton}
-                onClick={() => window.open('https://drive.google.com/file/d/1pNXGlh2UOy_0y-t6N6upyRz_fQoHPwjO/view?usp=sharing', '_blank')}
+                onClick={() =>
+                  window.open(
+                    'https://drive.google.com/file/d/1pNXGlh2UOy_0y-t6N6upyRz_fQoHPwjO/view?usp=sharing',
+                    '_blank'
+                  )
+                }
               >
                 Learn more about Sphere Timestamps
               </EmptyStateButton>

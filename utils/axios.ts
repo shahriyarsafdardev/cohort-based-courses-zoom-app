@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://app.getsphere.com/api/v2'
+  baseURL: 'https://scholarsite-staging.herokuapp.com/api/v2'
 });
 
 axiosInstance.interceptors.response.use(
