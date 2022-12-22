@@ -32,7 +32,7 @@ Now your ngrok setup is completed
 Create a .env file in root directory of your project: 
 
 Setup with staging backend 
-Add this in .env file `NEXT_PUBLIC_ROOT_URL=https://scholarsite-staging.herokuapp.com/api/v1`(This url is the link to the backend API on staging).
+Add this in .env file `NEXT_PUBLIC_ROOT_URL=https://sphere-rails-app-staging.herokuapp.com/api/v1`(This url is the link to the backend API on staging).
 
 Setup with local backend
 Run rails project with `rails s ` command.
